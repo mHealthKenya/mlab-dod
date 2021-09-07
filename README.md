@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://mlab.mhealthkenya.co.ke">
+  <a href="https://github.com/mHealthKenya/mlab-dod">
     <img src="https://mlab.mhealthkenya.co.ke/assets/images/logo.png" alt="mLab">
   </a>
   </p>
@@ -23,11 +23,11 @@ Alternative installation is possible without local dependencies relying on [Dock
 
 Clone the repository
 
-    git clone https://github.com/mHealthKenya/mLab.git
+    git clone https://github.com/mHealthKenya/mlab-dod.git
 
 Switch to the repo folder
 
-    cd mLab
+    cd mlab-dod
 
 Install all the dependencies using composer
 
