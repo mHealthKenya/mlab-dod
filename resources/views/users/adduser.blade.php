@@ -71,12 +71,12 @@
                                         <select id ="level" name="level" class="form-control">
                                             <option >Select</option>
                                         @if(Auth::user()->user_level < 2)    
-                                            <option value="1">National</option>
-                                            <option value="2">Partner</option>
-                                            <option value="5">County</option>
+                                            <option value="1">Super Admin</option>
+                                            <option value="2">Service Staff</option>
+                                            <option value="5">Unit Manager</option>
                                         @endif
                                         @if(Auth::user()->user_level == 2)
-                                            <option value="3">Facility Admin</option>
+                                            <option value="3">Healthcare Worker</option>
                                             <option value="4">Facility User</option>
                                         @endif 
                                         @if(Auth::user()->user_level == 3)
@@ -96,11 +96,11 @@
                                                             @endforeach
                                                     @endif
                                             </select>
-                                            <select hidden class="form-control" data-width="100%" id="partner" name="partner_id">
-                                                <option value="">Select Partner</option>
-                                                    @if (count($partners) > 0)
-                                                        @foreach($partners as $partner)
-                                                        <option value="{{$partner->id }}">{{ ucwords($partner->name) }}</option>
+                                            <select hidden class="form-control" data-width="100%" id="service" name="service_id">
+                                                <option value="">Select service</option>
+                                                    @if (count($services) > 0)
+                                                        @foreach($services as $service)
+                                                        <option value="{{$service->id }}">{{ ucwords($service->name) }}</option>
                                                             @endforeach
                                                     @endif
                                             </select>
@@ -133,17 +133,17 @@ $('#level').on('change', function() {
   if(level == 1){
     $('#affiliation').val("National");
     $('#affiliation').removeAttr('hidden');
-    $('#partner').attr("hidden",true);
+    $('#service').attr("hidden",true);
     $('#county').attr("hidden",true);
   }
   if(level == 2){
-    $('#partner').removeAttr('hidden');
+    $('#service').removeAttr('hidden');
     $('#affiliation').attr("hidden",true);
     $('#county').attr("hidden",true);
   }
   if(level == 5){
     $('#county').removeAttr('hidden');
-    $('#partner').attr("hidden",true);
+    $('#service').attr("hidden",true);
     $('#affiliation').attr("hidden",true);
   }
 });
@@ -188,7 +188,7 @@ $.ajax({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     },
     type: "POST",
-    url: '/get_partner_facilities_mlab',
+    url: '/get_service_facilities_mlab',
     data: {
         "sub_county_id": y
     },

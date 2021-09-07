@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Data;
 use App\County;
-use App\Partner;
+use App\Service;
 use App\Facility;
 use App\SubCounty;
 use App\HTSData;
 use App\SRLEIData;
 use App\SRLHTSData;
 use App\SRLVLData;
+use App\Unit;
 use Auth;
 
 class DataController extends Controller
@@ -21,10 +22,10 @@ class DataController extends Controller
         $results = Data::orderBy('id', 'DESC');
 
         if (Auth::user()->user_level == 2) {
-            $results->where('partner', Auth::user()->partner->name);
+            $results->where('service', Auth::user()->service->name);
         }
         if (Auth::user()->user_level == 5) {
-            $results->where('county', Auth::user()->county->name);
+            $results->where('unit', Auth::user()->unit->name);
         }
         if (Auth::user()->user_level == 3 || Auth::user()->user_level == 4) {
             $results->where('facility', Auth::user()->facility->name);
@@ -38,10 +39,10 @@ class DataController extends Controller
         $results = Data::orderBy('id', 'DESC')->where('result_type', 'Viral Load');
 
         if (Auth::user()->user_level == 2) {
-            $results->where('partner', Auth::user()->partner->name);
+            $results->where('service', Auth::user()->service->name);
         }
         if (Auth::user()->user_level == 5) {
-            $results->where('county', Auth::user()->county->name);
+            $results->where('unit', Auth::user()->unit->name);
         }
         if (Auth::user()->user_level == 3 || Auth::user()->user_level == 4) {
             $results->where('facility', Auth::user()->facility->name);
@@ -55,10 +56,10 @@ class DataController extends Controller
         $results = Data::orderBy('id', 'DESC')->where('result_type', 'EID');
 
         if (Auth::user()->user_level == 2) {
-            $results->where('partner', Auth::user()->partner->name);
+            $results->where('service', Auth::user()->service->name);
         }
         if (Auth::user()->user_level == 5) {
-            $results->where('county', Auth::user()->county->name);
+            $results->where('unit', Auth::user()->unit->name);
         }
         if (Auth::user()->user_level == 3 || Auth::user()->user_level == 4) {
             $results->where('facility', Auth::user()->facility->name);
@@ -67,12 +68,12 @@ class DataController extends Controller
         return view('data.results')->with('results', $results->paginate(100));
     }
 
-    public function partnerform()
+    public function serviceform()
     {
-        $partners = Partner::all();
+        $services = service::all();
 
         $data = array(
-            'partners' => $partners,
+            'services' => $services,
         );
         return view('data.hts_filter')->with($data);
     }
@@ -80,9 +81,13 @@ class DataController extends Controller
     public function hts_results(Request $request)
     {
         $results = HTSData::select('*');
-        if (!empty($request->partner_id)) {
-            $partner = Partner::find($request->partner_id);
-            $results->where('partner', $partner->name);
+        if (!empty($request->service_id)) {
+            $service = service::find($request->service_id);
+            $results->where('service', $service->name);
+        }
+        if (!empty($request->unit_id)) {
+            $unit = Unit::find($request->unit_id);
+            $data->where('unit', $unit->name);
         }
         if (!empty($request->county_id)) {
             $county = County::find($request->county_id);
@@ -104,7 +109,7 @@ class DataController extends Controller
         }
 
         if (Auth::user()->user_level == 2) {
-            $results->where('partner', Auth::user()->partner->name);
+            $results->where('service', Auth::user()->service->name);
         }
 
         return view('data.hts_results')->with('results', $results->paginate(100));
@@ -112,11 +117,11 @@ class DataController extends Controller
 
     public function rawdataform()
     {
-        $partners = Partner::all();
+        $services = service::all();
         
 
         $data = array(
-            'partners' => $partners,
+            'services' => $services,
         );
         return view('data.rawdata')->with($data);
     }
@@ -124,9 +129,13 @@ class DataController extends Controller
     public function fetchraw(Request $request)
     {
         $data = Data::select('*');
-        if (!empty($request->partner_id)) {
-            $partner = Partner::find($request->partner_id);
-            $data->where('partner', $partner->name);
+        if (!empty($request->service_id)) {
+            $service = service::find($request->service_id);
+            $data->where('service', $service->name);
+        }
+        if (!empty($request->unit_id)) {
+            $unit = Unit::find($request->unit_id);
+            $data->where('unit', $unit->name);
         }
         if (!empty($request->county_id)) {
             $county = County::find($request->county_id);
@@ -147,7 +156,7 @@ class DataController extends Controller
             $data->where('date_sent', '<=', date($request->to));
         }
         if (Auth::user()->user_level == 2) {
-            $data->where('partner', Auth::user()->partner->name);
+            $data->where('service', Auth::user()->service->name);
         }
         
 
@@ -158,11 +167,11 @@ class DataController extends Controller
 
     public function vl_srl_form()
     {
-        $partners = Partner::all();
+        $services = service::all();
         
 
         $data = array(
-            'partners' => $partners,
+            'services' => $services,
         );
         return view('data.vl_srl_filter')->with($data);
     }
@@ -170,9 +179,13 @@ class DataController extends Controller
     public function vl_srl_results(Request $request)
     {
         $results = SRLVLData::select('*');
-        if (!empty($request->partner_id)) {
-            $partner = Partner::find($request->partner_id);
-            $results->where('partner', $partner->name);
+        if (!empty($request->service_id)) {
+            $service = service::find($request->service_id);
+            $results->where('service', $service->name);
+        }
+        if (!empty($request->unit_id)) {
+            $unit = Unit::find($request->unit_id);
+            $results->where('unit', $unit->name);
         }
         if (!empty($request->county_id)) {
             $county = County::find($request->county_id);
@@ -200,7 +213,7 @@ class DataController extends Controller
         }
 
         if (Auth::user()->user_level == 2) {
-            $results->where('partner', Auth::user()->partner->name);
+            $results->where('service', Auth::user()->service->name);
         }
         if (Auth::user()->user_level == 5) {
             $results->where('county', Auth::user()->county->name);
@@ -214,11 +227,11 @@ class DataController extends Controller
 
     public function eid_srl_form()
     {
-        $partners = Partner::all();
+        $services = service::all();
         
 
         $data = array(
-            'partners' => $partners,
+            'services' => $services,
         );
         return view('data.eid_srl_filter')->with($data);
     }
@@ -228,9 +241,13 @@ class DataController extends Controller
     {
 
         $results = SRLEIData::select('*');
-        if (!empty($request->partner_id)) {
-            $partner = Partner::find($request->partner_id);
-            $results->where('partner', $partner->name);
+        if (!empty($request->service_id)) {
+            $service = service::find($request->service_id);
+            $results->where('service', $service->name);
+        }
+        if (!empty($request->unit_id)) {
+            $unit = Unit::find($request->unit_id);
+            $results->where('unit', $unit->name);
         }
         if (!empty($request->county_id)) {
             $county = County::find($request->county_id);
@@ -258,7 +275,7 @@ class DataController extends Controller
         }
 
         if (Auth::user()->user_level == 2) {
-            $results->where('partner', Auth::user()->partner->name);
+            $results->where('service', Auth::user()->service->name);
         }
         if (Auth::user()->user_level == 5) {
             $results->where('county', Auth::user()->county->name);
@@ -275,11 +292,11 @@ class DataController extends Controller
     
     public function hts_srl_form()
     {
-        $partners = Partner::all();
+        $services = service::all();
         
 
         $data = array(
-            'partners' => $partners,
+            'services' => $services,
         );
         return view('data.hts_srl_filter')->with($data);
     }
@@ -288,9 +305,13 @@ class DataController extends Controller
     public function hts_srl_results(Request $request)
     {
         $results = SRLHTSData::select('*');
-        if (!empty($request->partner_id)) {
-            $partner = Partner::find($request->partner_id);
-            $results->where('partner', $partner->name);
+        if (!empty($request->service_id)) {
+            $service = service::find($request->service_id);
+            $results->where('service', $service->name);
+        }
+        if (!empty($request->unit_id)) {
+            $unit = Unit::find($request->unit_id);
+            $results->where('unit', $unit->name);
         }
         if (!empty($request->county_id)) {
             $county = County::find($request->county_id);
@@ -318,7 +339,7 @@ class DataController extends Controller
         }
 
         if (Auth::user()->user_level == 2) {
-            $results->where('partner', Auth::user()->partner->name);
+            $results->where('service', Auth::user()->service->name);
         }
         if (Auth::user()->user_level == 5) {
             $results->where('county', Auth::user()->county->name);

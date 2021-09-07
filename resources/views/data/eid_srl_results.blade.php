@@ -30,7 +30,7 @@
                                                 <th>Facility</th>
                                                 <th>Sub-County</th>
                                                 <th>County</th>
-                                                <th>Partner</th>
+                                                <th>service</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -49,7 +49,7 @@
                                                         <td>  {{$result->facility}}</td>
                                                         <td>  {{$result->sub_county}}</td>
                                                         <td>  {{$result->county}}</td>
-                                                        <td> @if(!empty($result->partner)) {{$result->partner}} @else Not Provided @endif</td>
+                                                        <td> @if(!empty($result->service)) {{$result->service}} @else Not Provided @endif</td>
                                                     </tr>
                                                 @endforeach
                                             @endif

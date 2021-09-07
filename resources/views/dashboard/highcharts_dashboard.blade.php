@@ -7,8 +7,17 @@
         <div class="row">
             <div class="col">
                 <div class="form-group">
-                    <label for=" partners" class="col-form-label"><b>Select Partner(s)</b></label>
-                    <select class=" partners form-control selectpicker" id="partners" name="partners[]" multiple
+                    <label for=" services" class="col-form-label"><b>Select Service(s)</b></label>
+                    <select class=" services form-control selectpicker" id="services" name="services[]" multiple
+                        data-live-search="true">
+
+                    </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for=" units" class="col-form-label"><b>Select Unit(s)</b></label>
+                    <select class=" units form-control selectpicker" id="units" name="units[]" multiple
                         data-live-search="true">
 
                     </select>
@@ -63,7 +72,7 @@
                 <div class="card-body text-center">
                     <i class="i-Mailbox-Full"></i>
                     <div class="content">
-                        <p class="text-muted mt-4 mb-0">All Results</p>
+                        <p class="text-muted mt-3 mb-0">All Results</p>
                         <p id="all_records" class="text-primary text-18 line-height-1 mb-2"></p>
                     </div>
                 </div>
@@ -82,13 +91,25 @@
             </div>
         </div>
 
-        <div class="col-lg-2 col-md-6 col-sm-6">
+        <!-- <div class="col-lg-2 col-md-6 col-sm-6">
             <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
                 <div class="card-body text-center">
                     <i class="i-Globe"></i>
                     <div class="content">
                         <p class="text-muted mt-4 mb-0">Counties </p>
                         <p id="county_numbers" class="text-primary text-24 line-height-1 mb-2"></p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <div class="col-lg-2 col-md-6 col-sm-6">
+            <div class="card card-icon-bg card-icon-bg-primary o-hidden mb-4">
+                <div class="card-body text-center">
+                    <i class="i-Globe"></i>
+                    <div class="content">
+                        <p class="text-muted mt-4 mb-0">Units </p>
+                        <p id="unit_numbers" class="text-primary text-24 line-height-1 mb-2"></p>
                     </div>
                 </div>
             </div>
@@ -99,8 +120,8 @@
                 <div class="card-body text-center">
                     <i class="i-People-on-Cloud"></i>
                     <div class="content">
-                        <p class="text-muted mt-4 mb-0">Partners </p>
-                        <p id="partner_numbers" class="text-primary text-24 line-height-1 mb-2"></p>
+                        <p class="text-muted mt-4 mb-0">Services </p>
+                        <p id="service_numbers" class="text-primary text-24 line-height-1 mb-2"></p>
                     </div>
                 </div>
             </div>
@@ -276,36 +297,46 @@
                 tats(data.vl_tat, data.eid_tat);
                 maps(data.county_numbers);
                 pullCheck(data.pulled_data);
-                $('#partners').empty();
+                $('#services').empty();
+                $('#units').empty();
                 $('#counties').empty();
-                $.each(data.all_partners, function(number, partner) {
-                    $("#partners").append($('<option>').text(partner.name).attr('value',
-                        partner.id));
+                $.each(data.all_services, function(number, service) {
+                    $("#services").append($('<option>').text(service.name).attr('value',
+                        service.id));
+                });
+                $.each(data.all_units, function(number, unit) {
+                    $("#units").append($('<option>').text(unit.name).attr('value',
+                        unit.id));
                 });
                 $.each(data.all_counties, function(number, county) {
                     $("#counties").append($('<option>').text(county.name).attr('value',
                         county.id));
                 });
-                $("#partners").selectpicker('refresh');
+                $("#services").selectpicker('refresh');
+                $("#units").selectpicker('refresh');
                 $("#counties").selectpicker('refresh');
                 $("#all_records").html(data.all_records);
                 $("#all_facilities").html(data.facilities);
                 $("#county_numbers").html(data.counties);
-                $("#partner_numbers").html(data.partners);
+                $("#service_numbers").html(data.services);
                 $("#suppressed_negative").html(arr[0]);
                 $("#unsuppressed_positive").html(arr[1]);
                 let userlevel = '{!!Auth::user()->user_level!!}';
                 if (userlevel == 2) {
-                    let partnerId = '{!!Auth::user()->partner_id!!}';
-                    $('#partners').attr("disabled", true);
-                    $('#partners').selectpicker('val', partnerId);
-                    $("#partners").selectpicker('refresh');
+                    let serviceId = '{!!Auth::user()->service_id!!}';
+                    $('#services').attr("disabled", true);
+                    $('#services').selectpicker('val', serviceId);
+                    $("#services").selectpicker('refresh');
                 }
                 if (userlevel == 3) {
-                    let partnerId = '{!!Auth::user()->partner_id!!}';
-                    $('#partners').attr("disabled", true);
-                    $('#partners').selectpicker('val', partnerId);
-                    $("#partners").selectpicker('refresh');
+                    let serviceId = '{!!Auth::user()->service_id!!}';
+                    $('#services').attr("disabled", true);
+                    $('#services').selectpicker('val', serviceId);
+                    $("#services").selectpicker('refresh');
+                    let unitId = data.all_units[0].id;
+                    $('#units').attr("disabled", true);
+                    $('#units').selectpicker('val', unitId);
+                    $("#units").selectpicker('refresh');
                     let countyId = data.all_counties[0].id;
                     $('#counties').attr("disabled", true);
                     $('#counties').selectpicker('val', countyId);
@@ -319,7 +350,8 @@
         $('#dataFilter').on('submit', function(e) {
             e.preventDefault();
             $("#dashboard_overlay").show();
-            let partners = $('#partners').val();
+            let services = $('#services').val();
+            let units = $('#units').val();
             let counties = $('#counties').val();
             let subcounties = $('#subcounties').val();
             let facilities = $('#facilities').val();
@@ -332,7 +364,8 @@
             $.ajax({
                 type: 'POST',
                 data: {
-                    "partners": partners,
+                    "services": services,
+                    "units": units,
                     "counties": counties,
                     "subcounties": subcounties,
                     "facilities": facilities,
@@ -347,23 +380,30 @@
                     tats(data.vl_tat, data.eid_tat);
                     maps(data.county_numbers);
                     pullCheck(data.pulled_data);
-                    $('#partners').empty();
+                    $('#services').empty();
+                    $('#units').empty();
                     $('#counties').empty();
-                    $.each(data.all_partners, function(number, partner) {
-                        $("#partners").append($('<option>').text(partner.name).attr(
+                    $.each(data.all_services, function(number, service) {
+                        $("#services").append($('<option>').text(service.name).attr(
                             'value',
-                            partner.id));
+                            service.id));
+                    });
+                    $.each(data.all_units, function(number, units) {
+                        $("#units").append($('<option>').text(unit.name).attr('value',
+                            unit.id));
                     });
                     $.each(data.all_counties, function(number, county) {
                         $("#counties").append($('<option>').text(county.name).attr('value',
                             county.id));
                     });
-                    $("#partners").selectpicker('refresh');
+                    $("#services").selectpicker('refresh');
+                    $("#units").selectpicker("refresh");
                     $("#counties").selectpicker('refresh');
                     $("#all_records").html(data.all_records);
                     $("#all_facilities").html(data.facilities);
                     $("#county_numbers").html(data.counties);
-                    $("#partner_numbers").html(data.partners);
+                    $("#unit_numbers").html(data.units);
+                    $("#service_numbers").html(data.services);
                     $("#suppressed_negative").html(arr[0]);
                     $("#unsuppressed_positive").html(arr[1]);
                     $("#dashboard_overlay").hide();
@@ -384,9 +424,9 @@
             }
         });
         $(document).ready(function() {
-            $('.partners').selectpicker({});
-            $("#partners").change(function() {
-                let partners = $('#partners').val();
+            $('.services').selectpicker({});
+            $("#services").change(function() {
+                let services = $('#services').val();
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -395,14 +435,42 @@
                 $.ajax({
                     type: 'POST',
                     data: {
-                        "partners": partners
+                        "services": services
+                    },
+                    url: "{{ route('get_dashboard_units') }}",
+                    success: function(data) {
+                        $('#units').empty();
+                        $.each(data, function(number, unit) {
+                            $("#units").append($('<option>').text(
+                                unit.name)
+                                .attr(
+                                    'value',
+                                    unit.id));
+                        });
+                        $("#units").selectpicker('refresh');
+                    }
+                });
+            });
+
+            $("#units").change(function() {
+                let units = $('#units').val();
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                $.ajax({
+                    type: 'POST',
+                    data: {
+                        "units": units
                     },
                     url: "{{ route('get_dashboard_counties') }}",
                     success: function(data) {
                         $('#counties').empty();
                         $.each(data, function(number, county) {
                             $("#counties").append($('<option>').text(
-                                    county.name)
+                                    county
+                                    .name)
                                 .attr(
                                     'value',
                                     county.id));
@@ -411,6 +479,7 @@
                     }
                 });
             });
+
             $("#counties").change(function() {
                 let counties = $('#counties').val();
                 $.ajaxSetup({
@@ -438,9 +507,10 @@
                     }
                 });
             });
+
             $("#subcounties").change(function() {
                 let sub_counties = $('#subcounties').val();
-                let partners = $('#partners').val();
+                let services = $('#services').val();
                 $.ajaxSetup({
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -450,7 +520,7 @@
                     type: 'POST',
                     data: {
                         "sub_counties": sub_counties,
-                        "partners": partners
+                        "services": services
                     },
                     url: "{{ route('get_dashboard_facilities') }}",
                     success: function(data) {

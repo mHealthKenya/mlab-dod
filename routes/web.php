@@ -20,10 +20,11 @@ Auth::routes();
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/home', ['uses' => 'DashboardController@index', 'as' => 'home']);
     Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+    Route::post('/get_units', ['uses'=>'HomeController@get_units', 'as'=>'get_units']);
     Route::post('/get_subcounties', ['uses'=>'HomeController@get_subcounties', 'as'=>'get_subcounties']);
     Route::post('/get_facilities', ['uses'=>'HomeController@get_facilities', 'as'=>'get_facilities']);
     Route::post('/get_facilities_mlab', ['uses'=>'HomeController@get_facilities_mlab', 'as'=>'get_facilities_mlab']);
-    Route::post('/get_partner_facilities_mlab', ['uses'=>'HomeController@get_partner_facilities_mlab', 'as'=>'get_partner_facilities_mlab']);
+    Route::post('/get_service_facilities_mlab', ['uses'=>'HomeController@get_service_facilities_mlab', 'as'=>'get_service_facilities_mlab']);
     Route::post('/get_facilities_data', ['uses'=>'HomeController@get_facilities_data', 'as'=>'get_facilities_data']);
     Route::post('/get_counties', ['uses'=>'HomeController@get_counties', 'as'=>'get_counties']);
 
@@ -42,12 +43,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/get/client/results', 'UshauriController@getClientResults')->name('getResults');
 
 
-    Route::get('/partners', 'PartnerController@index')->name('partners');
-    Route::get('/add/partner/form', 'PartnerController@addpartnerform')->name('addpartnerform');
-    Route::post('/add/partner', 'PartnerController@addpartner')->name('addpartner');
-    Route::post('/edit/partner', 'PartnerController@editpartner')->name('editpartner');
-    Route::post('/delete/partner', 'PartnerController@deletepartner')->name('deletepartner');
+    Route::get('/services', 'serviceController@index')->name('services');
+    Route::get('/add/service/form', 'serviceController@addserviceform')->name('addserviceform');
+    Route::post('/add/service', 'serviceController@addservice')->name('addservice');
+    Route::post('/edit/service', 'serviceController@editservice')->name('editservice');
+    Route::post('/delete/service', 'serviceController@deleteservice')->name('deleteservice');
 
+    Route::get('/units', 'UnitController@index')->name('units');
+    Route::get('/add/unit/form', 'UnitController@addunitform')->name('addunitform');
+    Route::post('/add/unit', 'UnitController@addunit')->name('addunit');
+    Route::post('/edit/unit', 'UnitController@editunit')->name('editunit');
+    Route::post('/delete/unit', 'UnitController@deleteunit')->name('deleteunit');
 
     Route::get('/facilities', 'FacilityController@index')->name('facilities');
     Route::get('/add/facility/form', 'FacilityController@addfacilityform')->name('addfacilityform');
@@ -68,7 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/all/results', 'DataController@all_results')->name('all_results');
     Route::get('/vl/results', 'DataController@vl_results')->name('vl_results');
     Route::get('/eid/results', 'DataController@eid_results')->name('eid_results');
-    Route::get('/hts/allresults', 'DataController@partnerform')->name('hts_all_results');
+    Route::get('/hts/allresults', 'DataController@serviceform')->name('hts_all_results');
     Route::get('/hts/results', 'DataController@hts_results')->name('hts_results');
     Route::get('/raw/data', 'DataController@rawdataform')->name('raw_data_form');
     Route::get('/get/raw/data', 'DataController@fetchraw')->name('fetchraw');
@@ -88,6 +94,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/get_data', ['uses' => 'DashboardController@get_data', 'as' => 'get_data']);
     Route::get('/get_printers_data', ['uses' => 'DashboardController@get_printers_data', 'as' => 'get_printers_data']);
     Route::post('/get_dashboard_counties', ['uses' => 'DashboardController@get_dashboard_counties', 'as' => 'get_dashboard_counties']);
+    Route::post('/get_dashboard_units', ['uses' => 'DashboardController@get_dashboard_units', 'as' => 'get_dashboard_units']);
     Route::post('/get_dashboard_sub_counties', ['uses' => 'DashboardController@get_dashboard_sub_counties', 'as' => 'get_dashboard_sub_counties']);
     Route::post('/get_dashboard_facilities', ['uses' => 'DashboardController@get_dashboard_facilities', 'as' => 'get_dashboard_facilities']);
     Route::post('/filter/dashboard', ['uses' => 'DashboardController@get_filtered_data', 'as' => 'filterDashboard']);

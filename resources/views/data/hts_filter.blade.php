@@ -18,24 +18,35 @@
                                 @if (Auth::user()->user_level != 3 && Auth::user()->user_level != 4)
                                     @if(Auth::user()->user_level < 3)
                                         <div class="col-md-6 form-group mb-3">
-                                            <label for="firstName1">Partner</label>
-                                            <select  class="form-control" data-width="100%" id="partner" name="partner_id">
-                                                <option value="">Select Partner</option>
+                                            <label for="firstName1">Service</label>
+                                            <select  class="form-control" data-width="100%" id="service" name="service_id">
+                                                <option value="">Select Service</option>
                                                 @if(Auth::user()->user_level < 2)
-                                                    @if (count($partners) > 0)
-                                                        @foreach($partners as $partner)
-                                                        <option value="{{$partner->id}}">{{ ucwords($partner->name) }}</option>
+                                                    @if (count($services) > 0)
+                                                        @foreach($services as $service)
+                                                        <option value="{{$service->id}}">{{ ucwords($service->name) }}</option>
                                                             @endforeach
                                                     @endif
                                                 @endif
                                                 @if(Auth::user()->user_level == 2)
 
-                                                <option value="{{Auth::user()->partner->id}}">{{ ucwords(Auth::user()->partner->name) }}</option>
+                                                <option value="{{Auth::user()->service->id}}">{{ ucwords(Auth::user()->service->name) }}</option>
                                                 @endif
 
                                             </select>
                                         </div>
                                     @endif
+                                    <div class="col-md-6 form-group mb-3">
+                                        <label for="firstName1">Unit</label>
+                                        <select  class="form-control" data-width="100%" id="unit" name="unit_id">
+                                            <option value="">Select Unit</option>
+                                            @if(Auth::user()->user_level == 5)
+
+                                            <option value="{{Auth::user()->unit->id}}">{{ ucwords(Auth::user()->unit->name) }}</option>
+                                            @endif
+                                               
+                                        </select>
+                                    </div>
                                     <div class="col-md-6 form-group mb-3">
                                         <label for="firstName1">County</label>
                                         <select  class="form-control" data-width="100%" id="county" name="county_id">
@@ -123,7 +134,42 @@
 @section('bottom-js')
 <script type="text/javascript">
 
-$('#partner').change(function () {
+$('#service').change(function () {
+
+    $('#unit').empty();
+
+    var z = $(this).val();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: "POST",
+        url: '/get_units',
+        data: {
+            "service_id": z
+        },
+        dataType: "json",
+        success: function (data) {
+            var select = document.getElementById("unit"),
+                opt = document.createElement("option");
+
+                opt.value = "";
+                opt.textContent = "Select Unit";
+                select.appendChild(opt);
+            for (var i = 0; i < data.length; i++) {
+                
+            var select = document.getElementById("unit"),
+                opt = document.createElement("option");
+
+                opt.value = data[i].id;
+                opt.textContent = data[i].name;
+                select.appendChild(opt);
+            }
+        }
+    })
+});
+
+$('#unit').change(function () {
 
     $('#county').empty();
 
@@ -135,7 +181,7 @@ $('#partner').change(function () {
         type: "POST",
         url: '/get_counties',
         data: {
-            "partner_id": z
+            "unit_id": z
         },
         dataType: "json",
         success: function (data) {
