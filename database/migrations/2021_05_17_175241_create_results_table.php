@@ -40,6 +40,7 @@ class CreateResultsTable extends Migration
             $table->integer('il_send');
             $table->string('lab_name');
             $table->boolean('client_notified');
+            $table->integer('lab7_id');
             $table->timestamps();
         });
     }

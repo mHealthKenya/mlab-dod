@@ -83,7 +83,7 @@ class VLResultsController extends Controller
         $fields_string = http_build_query($fields);
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://eiddash.nascop.org/api/mlab",
+            CURLOPT_URL => "https://mlab.mod.go.ke/api/mlab",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -133,6 +133,7 @@ class VLResultsController extends Controller
                     $r->lab_order_date = $dat->lab_order_date;
                     $r->date_collected = $dat->date_collected;
                     $r->lab_name = $dat->lab_name;
+                    $r->lab7_id = $dat->id;
             
                     if ($r->save()) {
                         $task = new Task;
@@ -159,7 +160,7 @@ class VLResultsController extends Controller
                 $fields_string = http_build_query($fields);
             
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://eiddash.nascop.org/api/mlab?page=".$j,
+                    CURLOPT_URL => "https://mlab.mod.go.ke/api/mlab?page=".$j,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
@@ -206,6 +207,7 @@ class VLResultsController extends Controller
                             $r->lab_order_date = $dat->lab_order_date;
                             $r->date_collected = $dat->date_collected;
                             $r->lab_name = $dat->lab_name;
+                            $r->lab7_id = $dat->id;
                     
                             if ($r->save()) {
                                 $task = new Task;
@@ -261,7 +263,7 @@ class VLResultsController extends Controller
         $fields_string = http_build_query($fields);
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => "https://eiddash.nascop.org/api/mlab",
+            CURLOPT_URL => "https://mlab.mod.go.ke/api/mlab",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -318,6 +320,7 @@ class VLResultsController extends Controller
                     $r->lab_order_date = $dat->lab_order_date;
                     $r->date_collected = $dat->date_collected;
                     $r->lab_name = $dat->lab_name;
+                    $r->lab7_id = $dat->id;
             
                     if ($r->save()) {
                         $task = new Task;
@@ -344,7 +347,7 @@ class VLResultsController extends Controller
                 $fields_string = http_build_query($fields);
             
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://eiddash.nascop.org/api/mlab?page=".$j,
+                    CURLOPT_URL => "https://mlab.mod.go.ke/api/mlab?page=".$j,
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
@@ -399,6 +402,7 @@ class VLResultsController extends Controller
                             $r->lab_order_date = $dat->lab_order_date;
                             $r->date_collected = $dat->date_collected;
                             $r->lab_name = $dat->lab_name;
+                            $r->lab7_id = $dat->id;
                     
                             if ($r->save()) {
                                 $task = new Task;
