@@ -32,6 +32,7 @@ class VLResultsController extends Controller
             $r->csr = $request->csr;
             $r->lab_order_date = $request->lab_order_date;
             $r->date_collected = $request->date_collected;
+            $r->lab7_id = $request->id;
 
             if ($r->save()) {
                 return response(['status' => 'Success']);
